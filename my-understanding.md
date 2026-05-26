@@ -35,12 +35,20 @@ _Your answer:_
 **3. What is the difference between `req.body`, `req.params`, and `req.query`? Give a real example from your API for each one.**
 
 _Your answer:_
+1.req.body คือ object ที่เก็บข้อมูลที่ส่งมากับ request ที่เข้ามา สามารถ destructure เพื่อเอาของข้างในได้ เช่น const { name, price, quantity = 1 } = req.body
+2.req.params คือ object ที่เก็บค่า route parameter หรือก็คือ id (ค่าที่เปลี่ยนได้ใน URL)
+3.req.query คือ object ที่เก็บข้อมูล Query string (ข้อมูลท้าย URL หลังเครื่องหมาย ?)
 
 ---
 
 **4. What are HTTP status codes? List every status code you used in your API and explain why you chose it for that situation.**
 
 _Your answer:_
+1.200 method ปกติที่ success
+2.201 method POST ที่สร้างสำเร็จ
+3.400 เมื่อ Client ส่งข้อมูลไม่ครบ
+4.404 เมื่อ app หา product ไม่เจอ (request มาถูกต้องแต่ไม่มีข้อมูลนั้น)
+5.500 เมื่อเจอ error อื่นๆที่ไม่ได้เกิดจาก client เช่น code bug/syntax error/database พัง --> server error
 
 ---
 
@@ -48,33 +56,44 @@ _Your answer:_
 
 _Your answer:_
 คือ function ที่มีหน้าที่เฉพาะเจาะจง เอามาวางต่อๆกันก่อนถึง controller เพื่อเพิ่มfeatureให้ Back end
+เช่น ในโค้ดนี้ middleware ที่ใช้คือการlog method กับ url ให้ดู
+function logger(req, res, next) {
+console.log(`${req.method} ${req.url}`);
+//next() สั่งให้ไปต่อ ถ้าไม่มี Express จะหยุดอยุ่แค่นี้ เพราะมันคิดว่า middleware ยังทำงานไม่เสร็จ --> ค้าง/ไม่ได้ response
+next();
+}
 
 ---
 
 **6. Why does the order of middleware matter in Express? What could go wrong if it were in the wrong order?**
 
 _Your answer:_
+ลำดับสำคัญเพราะ middleware ต้องอยู่ระหว่างการทำงานของฝั่ง request และ response โดยจะทำงานกับตัว request ที่เข้ามาก่อนถึง route และลำดับการวาง middleware แต่ละตัวก็สำคัญเพราะ middleware บางตัวอาจจะต้องพึ่งอันก่อนหน้าหรือถ้าวางสลับกันอาจจะให้ผลลัพท์ที่เราไม่ต้องการ
 
 ---
 
 **7. Walk through what happens on the server, step by step, when a POST request is sent to `/products`.**
 
 _Your answer:_
+มันจะไปสร้าง product ตามที่ข้อมูล json ที่เราส่งไปโดยไปเก็บใน array ว่างเปล่า
 
 ---
 
 **8. What is CRUD? Map each operation to the HTTP method and route you used in your API.**
 
 _Your answer:_
+CRUDคือการจัดการข้อมูลที่requestเข้ามาโดย C คือ POST,R คือ GET,U คือ PUT/PATCH,D คือ DELETE
 
 ---
 
 **9. How does your API respond when something goes wrong — for example, when a product with a given ID does not exist?**
 
 _Your answer:_
+ขึ้นเลข 404 --> product not found
 
 ---
 
 **10. What was the hardest part of building this API and what did you do to get past it?**
 
 _Your answer:_
+ทำความเข้าใจ logic ในบาง part เพราะพื้นฐาน JS ยังไม่แม่นมาก

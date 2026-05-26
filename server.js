@@ -22,8 +22,8 @@ app.use(logger);
 
 const products = []; //in memory array(สร้าง DB ชั่วคราว)
 
-//Query string --> filter name
-// if url = /products?name=mouse  --> Path คือ /products, Query string คือ ?name=mouse แล้ว express จะเก็บไว้ใน req.query
+//Query string คือ คือข้อมูลท้าย URL หลังเครื่องหมาย ?
+// if url = /products?name=mouse  --> Path คือ /products, Query string คือ ?name=mouse แล้ว express จะเก็บไว้ใน object req.query
 app.get("/products", (req, res, next) => {
   try {
     const { name } = req.query;
@@ -51,7 +51,7 @@ app.get("/products", (req, res, next) => {
 
 //ดึงสินค้าตาม id
 //id-->Router parameter=ค่าที่เปลี่ยนได้ในurl
-//ถ้า url คือ /products/123 --> id =123 และ express จะเก็บค่า id ไว้ใน req.params --> req.params.id = 123
+//ถ้า url คือ /products/123 --> id =123 และ express จะเก็บค่า id ไว้ใน object req.params --> req.params.id = 123
 app.get("/products/:id", (req, res, next) => {
   // products.find() หา"ตัวแรก"ที่ตรงกับเงื่อนไขแล้วหยุดทันที แล้วคืน object นี้กลับมา
   //ถ้า find() หาไม่เจอเลยจะได้ undefined แต่ filter ถ้าหา "ทุกตัว" แล้วไม่เจอจะได้ [] ซึ่งไม้ใช่ error
@@ -75,7 +75,8 @@ app.get("/products/:id", (req, res, next) => {
 //add product
 app.post("/products", (req, res, next) => {
   try {
-    const { name, price, quantity = 1 } = req.body; //Destructure  เพื่อดึงค่าจาก body
+    //req.body คือ object ที่เก็บข้อมูลjsonที่มากับ request ที่เข้ามา
+    const { name, price, quantity = 1 } = req.body; //Destructure  เพื่อดึงข้อมูลใน body( body คือพวกข้อมูลรูปแบบ json)
 
     if (!name || !price) {
       const error = new Error("Name and price are required");
@@ -170,7 +171,8 @@ app.use((err, req, res, next) => {
 
   //500-->server error(ไม่ใช่ user fault) --> Cannot read properties of undefined
   //หมายถึง-->ถ้ามี error หลุดมาถึงนี่ ให้ถือว่า server พัง
-  res.status(500).json({
+  //ถ้ามี err.status ใช้เลข response นั้น ถ้าไม่มีใช้ 500
+  res.status(err.status || 500).json({
     success: false,
     message: err.message,
   });
