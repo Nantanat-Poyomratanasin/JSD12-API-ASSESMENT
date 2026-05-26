@@ -1,0 +1,39 @@
+### GET all products
+GET http://localhost:3000/products
+
+###
+
+### Create product
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "name": "Eye brow pencil",
+  "price": 2000,
+  "quantity": 4
+}
+
+###
+
+### GET product by id
+GET http://localhost:3000/products/1779783219339
+
+###
+
+### Update product
+PATCH http://localhost:3000/products/1779784053046
+Content-Type: application/json
+
+{
+  "name": "Eyeliner"
+}
+
+###
+
+### Delete product
+DELETE http://localhost:3000/products/1779783219339
+
+###
+
+### Filter by name
+GET http://localhost:3000/products?name=mouse
